@@ -1,0 +1,4 @@
+{application, ebm, [
+    {description, "Boyer Moore for Erlang Binaries"},
+    {vsn, git}
+]}.

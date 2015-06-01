@@ -4,35 +4,22 @@
 
 
 -spec search(binary(), binary()) -> integer().
--spec search(binary(), binary(), non_neg_integer()) -> integer().
+-spec search(binary(), binary(), pos_integer()) -> integer().
 -spec search_all(binary(), binary()) -> [integer()].
 
 
-% Search for the first occurence of Needle in Haystack.
-search(Needle, Haystack) ->
-    search(Needle, Haystack, 0).
+% Search for the first occurence of Pattern in String.
+search(Pattern, String) ->
+    search(Pattern, String, 1).
 
-% Search for the first occurence of Needle in a section of Haystack.
+% Search for all occurences of Pattern in String.
+search_all(Pattern, String) ->
+    search(Pattern, String, -1).
+
+% Search for the first occurence of Pattern in a section of String.
 % StartIndex is inclusive.
-search(_Needle, _Haystack, _StartIndex) ->
+search(_Pattern, _String, _NumSearches) ->
     erlang:nif_error({nif_not_loaded, ?MODULE}).
-
-
-% Search for all occurences of Needle in Haystack.
-search_all(Needle, Haystack) ->
-    do_search_all(Needle, Haystack, 0, size(Needle), []).
-
-do_search_all(Needle, Haystack, StartIndex, NeedleLen, Acc) ->
-    case search(Needle, Haystack, StartIndex) of
-        % Next occurence found, advance index and continue.
-        Int when Int >= 0 ->
-            NewStart = StartIndex + NeedleLen,
-            NewAcc = [Int|Acc],
-            do_search_all(Needle, Haystack, NewStart, NeedleLen, NewAcc);
-
-        % Done searching.
-        -1 -> Acc
-    end.
 
 
 load_shared_obj() ->
